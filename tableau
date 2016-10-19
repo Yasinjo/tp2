@@ -1,0 +1,267 @@
+#include "Tableau.h";
+
+/**
+ * @Name  : Init_Tab
+ * @param tab : le tableau á initialiser
+ * @return tab initialisé
+ */
+void Init_Tab(Tab *MonTab)
+{
+    MonTab->rgD = -1;
+}
+/**
+* @Name : Taille_Tab
+* @param tab : le tableau que on veut calculer sa taille
+* @return la taille du tableau. -1 si il est vide
+*/
+short Taille_Tab(Tab tab)
+{
+    return ((short) tab.rgD + 1);
+}
+
+/**
+ * @Name  : Raz_Tab
+ * @param Tab : le Tableau á vider
+ */
+
+void Raz_Tab(Tab *tab)
+{
+    /*
+     * le fait de vider un tableau correspand á affecter
+     * la valeur -1, au variable rgD, pour indiquer que
+     * on a pas d'élément dans le tableau
+     */
+    tab->rgD = -1;
+}
+
+/**
+ * @Name  : Inserer_Elm
+ * @param pos_ins : la position dans la quelle on veut inserer
+ * @param data : la valeur á inserer
+ * @param Tab : Le tableau dans lequel on veut inserer
+ * @return  -1 : si le tableau est saturée
+ *           0 : si la positoin est non valide
+ *           1 : en cas de succés
+ */
+short Inserer_Elm(short pos_ins, int data, Tab *tab)
+{
+    short i = tab->rgD; //index pour parcourire le tab
+
+    //si le tab est saturé
+    if(tab->rgD >= MAX_ELM)
+        return ((int) -1);//tab Saturé
+
+    //si la position d'insertion n'est pas valide
+    if( (pos_ins < 0) || (pos_ins > (tab->rgD + 1)) )
+        return ((int) 0);
+
+    //on tasse le tableau jusqu a ce qu on arrive a la position pos_ins
+    while( i >= pos_ins )
+    {
+        tab->Tab[i+1] = tab->Tab[i];
+        i--;
+    }
+
+    //on affect la valuer de la variable data á la case de la position i+1
+    tab->Tab[i+1] = data;
+
+    //finallement en incremant la valeur de rgD
+    (tab->rgD)++;
+
+    //retourne 1 pour indiquer que l insertion est bien passée
+    return ((short) 1);
+}
+
+/**
+ * @Name : Supp_Elm
+ * @param pos : la position de l'élément á supprimer(index)
+ * @param tab : lle tableau á modifier
+ * @return 0 : si la position n'est pas valide
+ *         1 : si l'élément est supprimé avec succés
+ */
+
+short Supp_Elm(short pos, Tab *tab)
+{
+    short i = pos; //index pour parcourire le tab
+
+    //si la position d'insertion n'est pas valide
+    if( (pos < 0) || (pos > tab->rgD) )
+        return ((int) 0);
+
+    //on tasse le tableau jusqu a ce qu on arrive a la position rgD
+    while( i < tab->rgD )
+    {
+        tab->Tab[i] = tab->Tab[i+1];
+        i++;
+    }
+
+    //finallement en incremant la valeur de rgD
+    (tab->rgD)--;
+
+    //retourne 1 pour indiquer que l insertion est bien passée
+    return ((short) 1);
+}
+
+
+/**
+ * @name : Afficher tab
+ * @param le tableau a afficher
+ */
+void Afficher_Tab(Tab *tab)
+{
+    int i;
+    printf("\n\t\t Affichage : \n");
+    for( i=0; i <= tab->rgD; i++)
+        printf("elm %d : %d\n", i, tab->Tab[i]);
+}
+
+//////////////////////////////////////////////////////////////////////////:
+
+int estVide(Tab monTab)
+{
+    if(monTab.rgD == -1 ) return 1;
+    return 0;
+}
+
+//seulement si le tableau est vide
+int inserer_tout_tab(Tab *monTab)
+{
+    if(estVide(*monTab))
+    {
+        int nbElem,ind,elem;
+        printf("\nVeuillez entrer le nb d'elements que vous voulez saisir maintenant : ");
+        scanf("%d",&nbElem);
+        printf("\nEntrer vos elements un par un : \n");
+        for(ind=0;ind<nbElem;ind++)
+        {
+            scanf("%d",&elem);
+            monTab->Tab[ind]=elem;
+            monTab->rgD++;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+void max_tab(Tab monTab)
+{
+    if(!estVide(monTab))
+    {
+        int ind,max;
+        max=monTab.Tab[0];
+        for(ind=0;ind<monTab.rgD;ind++)
+            if(monTab.Tab[ind]>max)
+                max = monTab.Tab[ind];
+        printf("\n\n\tLe maximum du tableau est %d.",max);
+        ("\n\n\tIl se trouve dans les positions : ");
+        for(ind=0;ind<monTab.rgD;ind++)
+            if(max == monTab.Tab[ind])
+                printf("\n\n\t%d",ind+1);
+    }
+    else printf("\n\n\tLe tableau est vide.\n");
+}
+
+void min_tab(Tab monTab)
+{
+    if(!estVide(monTab))
+    {
+        int ind,min;
+        min=monTab.Tab[0];
+        for(ind=0;ind<monTab.rgD;ind++)
+            if(monTab.Tab[ind]<min)
+                min = monTab.Tab[ind];
+        printf("\n\n\tLe minimum du tableau est %d.",min);
+        ("\n\n\tIl se trouve dans les positions : ");
+        for(ind=0;ind<monTab.rgD;ind++)
+            if(min == monTab.Tab[ind])
+                printf("\n\n\t%d",ind+1);
+    }
+    else printf("\n\n\tLe tableau est vide.\n");
+}
+
+void somme(Tab monTab)
+{
+    if(estVide(monTab))
+    {
+       printf("\n\n\tLe tableau est vide.\n");
+    }
+    else
+    {
+        int ind,somme=0;
+        for(ind=0;ind<monTab.rgD;ind++)
+            somme+=monTab.Tab[ind];
+        printf("\n\n\tLa somme de tout les elements du tableau est : %d\n",somme);
+    }
+}
+
+void produit(Tab monTab)
+{
+    if(estVide(monTab))
+    {
+       printf("\n\n\tLe tableau est vide.\n");
+    }
+    else
+    {
+        int ind,produit=1;
+        for(ind=0;ind<monTab.rgD;ind++)
+            produit*=monTab.Tab[ind];
+        printf("\n\n\tLe produit de tout les elements du tableau est : %d\n",produit);
+    }
+}
+
+void recherche(Tab monTab,int elem)
+{
+    if(estVide(monTab))
+    {
+       printf("\n\n\tLe tableau est vide.\n");
+    }
+    else
+    {
+        int ind,trouver=0;
+        for(ind=0;ind<monTab.rgD;ind++)
+        {
+            if(elem == monTab.Tab[ind])
+            {
+                trouver++;
+                if(trouver == 1)
+                    printf("\n\n\t Element trouve avec les occurrences : \n\n\t");
+                printf("%d\t",ind+1);
+
+            }
+        }
+    }
+}
+
+int supp_occurences(Tab *monTab,int elem)
+{
+    if(estVide(*monTab))
+    {
+       printf("\n\n\tLe tableau est vide.\n");
+       return 0;
+    }
+    else
+    {
+        int ind,conteur=0;
+        for(ind=0;ind<monTab->rgD;ind++)
+        {
+            if(elem == monTab->Tab[ind])
+            {
+                Supp_Elm(ind,monTab);
+                conteur++;
+            }
+
+        }
+        if(conteur==0)
+            return 0;//element non trouvé
+        return 1;
+    }
+}
+
+int main()
+{
+    Tab T;
+    Init_Tab(&T);
+    inserer_tout_tab(&T);
+    Afficher_Tab(&T);
+    return 0;
+}
